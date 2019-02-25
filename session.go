@@ -6,6 +6,6 @@ import "time"
 type Session struct {
 	ID        string `json:"id"`
 	Values    map[string]interface{}
-	CreatedOn time.Time `json:"created-on"`
-	ExpiresOn time.Time `json:"expires-on"`
+	CreatedAt time.Time `json:"created-at"`
+	ExpiresAt time.Time `json:"expires-at"`
 }

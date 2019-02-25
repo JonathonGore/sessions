@@ -106,7 +106,7 @@ func (m *Manager) SessionStart(w http.ResponseWriter, r *http.Request, values ma
 	}
 
 	sid := generateSessionID()
-	s := Session{ID: sid, Values: values, ExpiresOn: time.Now().Add(time.Duration(m.maxLifetime) * time.Second)}
+	s := Session{ID: sid, Values: values, CreatedAt: time.Now(), ExpiresAt: time.Now().Add(time.Duration(m.maxLifetime) * time.Second)}
 
 	m.sessionMap.Store(sid, s)
 	m.db.InsertSession(s)
