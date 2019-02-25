@@ -99,14 +99,14 @@ func (m *Manager) HasSession(r *http.Request) bool {
 
 // SessionStart checks the existence of any sessions related to the current
 // request, or creates a new session if none is found.
-func (m *Manager) SessionStart(w http.ResponseWriter, r *http.Request, username string) (Session, error) {
+func (m *Manager) SessionStart(w http.ResponseWriter, r *http.Request, values map[string]interface{}) (Session, error) {
 	// TODO: Right now if there is a corrupt value for the cookie it will never be repaired
 	if m.HasSession(r) {
 		return m.GetSession(r)
 	}
 
 	sid := generateSessionID()
-	s := Session{SID: sid, Username: username, ExpiresOn: time.Now().Add(time.Duration(m.maxLifetime) * time.Second)}
+	s := Session{ID: sid, Values: values, ExpiresOn: time.Now().Add(time.Duration(m.maxLifetime) * time.Second)}
 
 	m.sessionMap.Store(sid, s)
 	m.db.InsertSession(s)
