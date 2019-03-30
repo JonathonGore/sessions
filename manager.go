@@ -19,6 +19,7 @@ const (
 
 type Manager struct {
 	cookieName  string   // Name of the cookie we are storing in the users http cookies
+	domain      string   // Domain for which the cookie will be sent.
 	sessionMap  sync.Map // Thread safe map for storing our sessions in memory
 	maxLifetime int64    // Expiry time for our sessions
 	db          StorageDriver
@@ -34,6 +35,10 @@ func NewManager(cookieName string, maxlifetime int64, db StorageDriver) (*Manage
 	}
 
 	return m, nil
+}
+
+func (m *Manager) SetDomain(domain string) {
+	m.domain = domain
 }
 
 // unwrapSession converts the value stored in memory for a particular session
@@ -114,6 +119,7 @@ func (m *Manager) SessionStart(w http.ResponseWriter, r *http.Request, values ma
 	// HTTP only makes it so the cookie is only accessible when sending an http
 	// request (so not in javascript)
 	cookie := http.Cookie{
+		Domain:   m.domain,
 		Name:     m.cookieName,
 		Value:    url.QueryEscape(sid),
 		Path:     "/",
