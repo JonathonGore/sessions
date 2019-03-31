@@ -145,7 +145,15 @@ func (m *Manager) SessionDestroy(w http.ResponseWriter, r *http.Request) error {
 	m.db.DeleteSession(cookie.Value)
 
 	// Overwrite the current cookie with an expired one
-	ec := http.Cookie{Name: m.cookieName, Path: "/", HttpOnly: true, Expires: time.Unix(0, 0), MaxAge: -1}
+	ec := http.Cookie{
+		Domain:   m.domain,
+		Name:     m.cookieName,
+		Path:     "/",
+		HttpOnly: true,
+		Expires:  time.Unix(0, 0),
+		MaxAge:   -1,
+	}
+
 	http.SetCookie(w, &ec)
 
 	return nil
